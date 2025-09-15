@@ -8,6 +8,18 @@ public class HomeBase : MonoBehaviour
     public float maxHealth = 1000f;
     private float currentHealth;
 
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     void Start()
     {
         currentHealth = maxHealth;
