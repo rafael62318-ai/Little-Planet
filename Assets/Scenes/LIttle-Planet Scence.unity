@@ -304,6 +304,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HomeBase
       objectReference: {fileID: 0}
+    - target: {fileID: 8945535398229448718, guid: 9922e3605abcaec4d93c52e7888e26e5, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -360,7 +364,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
@@ -728,6 +732,10 @@ PrefabInstance:
       propertyPath: waves.Array.data[1].enemyGroups.Array.data[0].count
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1056505948924376234, guid: ec90a79f3b021aa4c997550bb8624467, type: 3}
+      propertyPath: waves.Array.data[0].enemyGroups.Array.data[0].enemyPrefab
+      value: 
+      objectReference: {fileID: 1771768222903899328, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
     - target: {fileID: 1056505948924376234, guid: ec90a79f3b021aa4c997550bb8624467, type: 3}
       propertyPath: waves.Array.data[1].enemyGroups.Array.data[0].enemyPrefab
       value: 
@@ -1147,7 +1155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 966a6507913678e4892655ee6476a52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  friendlyAlienPrefab: {fileID: 6047428679272385881, guid: d8c5caac938d8c54b9d888a02c90c8ab, type: 3}
+  friendlyAlienPrefab: {fileID: 876194674969869940, guid: beadd7037c9850743944cecd4fea3889, type: 3}
   basketCenterPoint: {fileID: 662961411}
   throwPoint: {fileID: 1152125722}
   throwForce: 30
