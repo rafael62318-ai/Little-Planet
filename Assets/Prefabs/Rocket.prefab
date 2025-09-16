@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 6604139191922503535}
   m_Layer: 0
   m_Name: Rocket
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -325,7 +325,7 @@ Animator:
   m_GameObject: {fileID: 876194674969869940}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2427a30bcf4a119429dc4486c9af4a14, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7e1cd47175f2b0e4da18e4fbc890f3df, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -352,14 +352,14 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 6.7789345
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 2.8894672, z: 0}
 --- !u!54 &3181205305065402348
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -400,10 +400,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   searchRadius: 15
-  attackRange: 5
+  attackRange: 0.5
   moveSpeed: 5
   attackDamage: 10
   attackCooldown: 1.5
+  attackRadius: 0.5
+  attackEffectPrefab: {fileID: 2944396702758532163, guid: c0f72b01bf3338e448c708f46ad97502, type: 3}
+  attackSound: {fileID: 8300000, guid: 3ff9ce8c468eec44b9b344c20de3102d, type: 3}
+  attackPoint: {fileID: 0}
+  deathSound: {fileID: 0}
 --- !u!114 &1061741459336655759
 MonoBehaviour:
   m_ObjectHideFlags: 0

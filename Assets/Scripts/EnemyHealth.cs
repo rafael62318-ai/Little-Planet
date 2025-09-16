@@ -4,35 +4,41 @@ public class EnemyHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     public int goldReward = 10;
+    public float currentHealth;
 
-    private float currentHealth;
+    private Enemy enemyScript;
 
     void Start()
     {
         currentHealth = maxHealth;
+        enemyScript = GetComponent<Enemy>();
     }
 
-    //외부(아군 AI)에서 호출할 피해 받는 함수
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
 
-        if (currentHealth <= 0)
+        if (currentHealth > 0)
+        {
+            if (enemyScript != null)
+                enemyScript.GetHit(); // 피격 애니메이션 & 이동 정지
+        }
+        else
         {
             Die();
         }
     }
 
-    //사망 처리 함수
     void Die()
     {
-        Debug.Log(gameObject.name + "처치! 골드 +" + goldReward);
-        
-        if(ResourceManager.Instance != null)
+        if (enemyScript != null)
+            enemyScript.Die();
+
+        Debug.Log(gameObject.name + " 처치! 골드 +" + goldReward);
+
+        if (ResourceManager.Instance != null)
         {
             ResourceManager.Instance.AddGold(goldReward);
         }
-
-        Destroy(gameObject);
     }
 }

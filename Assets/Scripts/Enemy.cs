@@ -7,55 +7,122 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private int attackDamage = 10;
-    
-    // WaveManager가 이 변수에 경로 정보를 자동으로 넣어줍니다.
-    [HideInInspector]
-    public Transform[] waypoints;
-    
+
+    [Header("애니메이션 설정")]
+    private Animator animator;
+    private Rigidbody rb;
+    private bool isDead = false;
+    private bool isHit = false; // 피격 중 이동 정지
+
+    [HideInInspector] public Transform[] waypoints; // WaveManager에서 설정
     private int waypointIndex = 0;
     private bool hasReachedEnd = false;
 
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+
+        if (animator != null)
+            animator.SetBool("IsMoving", false); // 시작 IdleBattle
+    }
+
     void Update()
     {
-        // 경로 끝에 도달했다면 더 이상 움직이지 않습니다.
-        if (hasReachedEnd) return;
-        
-        // 웨이포인트가 설정되지 않았거나, 모든 경로를 통과했다면
-        if (waypoints == null || waypointIndex >= waypoints.Length)
+        if (isDead) return;
+
+        // 피격 중일 때 이동 정지
+        if (isHit)
         {
-            hasReachedEnd = true;
-            StartCoroutine(AttackBase()); // 공격을 시작합니다.
+            if (animator != null) animator.SetBool("IsMoving", false);
+            if (rb != null) rb.linearVelocity = Vector3.zero; // 관성 제거
             return;
         }
 
-        // 현재 목표 웨이포인트를 설정합니다.
-        Transform targetWaypoint = waypoints[waypointIndex];
+        // 경로 끝 → 본진 공격
+        if (hasReachedEnd) return;
+        if (waypoints == null || waypointIndex >= waypoints.Length)
+        {
+            hasReachedEnd = true;
+            if (animator != null) animator.SetBool("IsMoving", false);
+            StartCoroutine(AttackBase());
+            return;
+        }
 
-        // --- 행성 표면에 맞는 이동 및 회전 로직 ---
+        // 이동 처리
+        Transform targetWaypoint = waypoints[waypointIndex];
         Vector3 dir = (targetWaypoint.position - transform.position).normalized;
+
+        // 회전
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
-        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
-        // 목표 웨이포인트에 가까워지면 다음 목표를 설정합니다.
+        // Rigidbody 이동
+        if (rb != null)
+        {
+            rb.MovePosition(transform.position + transform.forward * moveSpeed * Time.deltaTime);
+        }
+
+        if (animator != null) animator.SetBool("IsMoving", true);
+
+        // 웨이포인트 도착 판정
         if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.5f)
         {
             waypointIndex++;
         }
     }
-    
-    // 본진을 주기적으로 공격하는 로직입니다.
+
     IEnumerator AttackBase()
     {
-        while (true)
+        while (!isDead)
         {
-            // HomeBase 스크립트의 싱글톤 인스턴스를 통해 공격합니다.
             if (HomeBase.Instance != null)
             {
+                if (animator != null) animator.SetTrigger("Attack");
                 HomeBase.Instance.TakeDamage(attackDamage);
             }
-            // 1초 대기 후 다시 공격합니다.
             yield return new WaitForSeconds(1f);
         }
+    }
+
+    // 피격 처리
+    public void GetHit()
+    {
+        if (isDead) return;
+
+        isHit = true;
+        if (animator != null) animator.SetTrigger("GetHit");
+
+        StartCoroutine(RecoverFromHitByAnim());
+    }
+
+    private IEnumerator RecoverFromHitByAnim()
+    {
+        // 애니메이션 전환 반영 대기
+        yield return null;
+
+        if (animator != null)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            float hitAnimLength = stateInfo.length;
+            yield return new WaitForSeconds(hitAnimLength);
+        }
+
+        isHit = false;
+    }
+
+    // 죽음 처리
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        StopAllCoroutines();
+        if (animator != null) animator.SetTrigger("Die");
+
+        if (rb != null) rb.linearVelocity = Vector3.zero; // 멈춤
+        moveSpeed = 0f;
+
+        Destroy(gameObject, 3f);
     }
 }
