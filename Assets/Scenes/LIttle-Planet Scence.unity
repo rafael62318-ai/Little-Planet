@@ -241,7 +241,7 @@ Transform:
   m_GameObject: {fileID: 313378618}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.58, y: 27.05, z: -2.26}
+  m_LocalPosition: {x: -6.79, y: 27.27, z: -2.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -688,6 +688,10 @@ PrefabInstance:
       propertyPath: waves.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1056505948924376234, guid: ec90a79f3b021aa4c997550bb8624467, type: 3}
+      propertyPath: portalEffectPrefab
+      value: 
+      objectReference: {fileID: 8724466350249207100, guid: 4e874c469b3689848bf5cca3a0af4967, type: 3}
     - target: {fileID: 1056505948924376234, guid: ec90a79f3b021aa4c997550bb8624467, type: 3}
       propertyPath: waypoints.Array.size
       value: 1

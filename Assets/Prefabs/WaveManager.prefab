@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves:
   - enemyGroups:
-    - enemyPrefab: {fileID: 1337960182647970269, guid: a01fb8d2a214d1a45855df7202836824, type: 3}
+    - enemyPrefab: {fileID: 1771768222903899328, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
       count: 5
     spawnRate: 1
   spawnPoints:
