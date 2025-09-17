@@ -60,8 +60,31 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6040362807802321000, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: myHealthBar
+      value: 
+      objectReference: {fileID: 5251935592548262477}
+    - target: {fileID: 6051400664498798461, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051400664498798461, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+--- !u!114 &5251935592548262477 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3862786724695399087, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+  m_PrefabInstance: {fileID: 9041538751356057826}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed9a777b6290fa4d8b21a4645de01c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

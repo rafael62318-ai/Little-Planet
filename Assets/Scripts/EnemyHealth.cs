@@ -2,20 +2,34 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [Header("능력치 설정")]
     public float maxHealth = 100f;
     public int goldReward = 10;
+
+    [Header("UI 설정")]
+    // 인스펙터에서 적 프리팹의 자식으로 있는 3D 체력 바 캔버스를 연결
+    public WorldSpaceHealthBar myHealthBar;
 
     private float currentHealth;
 
     void Start()
     {
         currentHealth = maxHealth;
+        // 시작할 때 체력 바를 100%로 채워줌
+        if (myHealthBar != null)
+        {
+            myHealthBar.UpdateHealth(currentHealth, maxHealth);
+        }
     }
 
-    //외부(아군 AI)에서 호출할 피해 받는 함수
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        // 체력 바에 변경된 체력을 업데이트하도록 신호를 보냄
+        if (myHealthBar != null)
+        {
+            myHealthBar.UpdateHealth(currentHealth, maxHealth);
+        }
 
         if (currentHealth <= 0)
         {
@@ -23,16 +37,12 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    //사망 처리 함수
     void Die()
     {
-        Debug.Log(gameObject.name + "처치! 골드 +" + goldReward);
-        
-        if(ResourceManager.Instance != null)
+        if (ResourceManager.Instance != null)
         {
             ResourceManager.Instance.AddGold(goldReward);
         }
-
         Destroy(gameObject);
     }
 }
