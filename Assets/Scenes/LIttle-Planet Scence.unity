@@ -1158,7 +1158,7 @@ MonoBehaviour:
   friendlyAlienPrefab: {fileID: 876194674969869940, guid: beadd7037c9850743944cecd4fea3889, type: 3}
   basketCenterPoint: {fileID: 662961411}
   throwPoint: {fileID: 1152125722}
-  throwForce: 30
+  throwForce: 2
   pullOutDuration: 0.5
   throwCooldown: 1
 --- !u!4 &2081040224 stripped
