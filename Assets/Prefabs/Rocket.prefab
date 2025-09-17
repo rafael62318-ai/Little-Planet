@@ -400,7 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   searchRadius: 15
-  attackRange: 5
+  attackRange: 1
   moveSpeed: 5
   attackDamage: 10
   attackCooldown: 1.5
