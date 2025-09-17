@@ -75,7 +75,7 @@ public class FriendlyAlienAI : MonoBehaviour
     void MoveTowardsTarget()
     {
         //행성 표면을 따라 자연스럽게 회전 및 이동
-        Vector3 dir = (currentTarget.position = transform.position).normalized;
+        Vector3 dir = (currentTarget.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
