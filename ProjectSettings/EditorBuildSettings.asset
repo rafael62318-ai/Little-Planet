@@ -9,8 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Start Scence.unity
+    path: Assets/Scenes/Main Scence.unity
     guid: 41ce618097ef46441b220e7a5af5e98d
+  - enabled: 1
+    path: Assets/Scenes/LIttle-Planet Scence.unity
+    guid: 78eb76ef2c68fd247b420519ea526f60
+  - enabled: 1
+    path: Assets/Scenes/GameOver Scence.unity
+    guid: b53f5f3dbef086e44933ac4fd48c6ed4
+  - enabled: 1
+    path: Assets/Scenes/GameClear Scence.unity
+    guid: 385b8845e50db4145b8ff67ad654b004
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d0e0c7483715cee46bc5f5d029b44d74, type: 2}

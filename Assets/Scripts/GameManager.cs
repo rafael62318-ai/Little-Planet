@@ -1,10 +1,16 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; 
 
 public class GameManager : MonoBehaviour
 {
     public AudioManager audioManager;
     private HomeBase homeBase;
     private bool gameEnded = false;
+
+    // 💡 Inspector에서 설정할 씬 이름 변수 추가
+    public string winSceneName = "ClearScene"; 
+    public string loseSceneName = "GameOverScene";
+
 
     void Start()
     {
@@ -50,16 +56,26 @@ public class GameManager : MonoBehaviour
         if (gameEnded) return;
 
         gameEnded = true; // 게임이 끝났음을 표시
-        
-        // 게임을 일시정지합니다.
-        Time.timeScale = 0;
-        
+
+        // ⚠️ 씬 로드 전에 시간을 다시 정상화 (매우 중요)
+        Time.timeScale = 1f;
+
         // AudioManager를 통해 결과 BGM을 재생합니다.
         if (audioManager != null)
         {
             audioManager.PlayEndGameBGM(result);
         }
-        
+
         Debug.Log("게임 종료! 결과: " + result);
+        
+        // 🏆 결과에 따라 씬을 로드합니다.
+        if (result == GameResult.Win)
+        {
+            SceneManager.LoadScene("GameClear Scence");
+        }
+        else // GameResult.Lose
+        {
+            SceneManager.LoadScene("GameOver Scence");
+        }
     }
 }

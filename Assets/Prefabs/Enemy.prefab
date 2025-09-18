@@ -184,6 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   goldReward: 10
+  myHealthBar: {fileID: 0}
 --- !u!1 &2734301159685092795
 GameObject:
   m_ObjectHideFlags: 0
