@@ -18,6 +18,7 @@ public class WaveManager : MonoBehaviour
     {
         public EnemyGroup[] enemyGroups; //웨이브에 등장하는 적 목록
         public float spawnRate; //1초에 몇 마리씩 생성할지 속도를 담는 변수
+        public Transform[] waveWaypoints; //  **이 웨이브에 사용할 전용 이동 경로 (추가)**
     }
 
     [Header("WaveSetting")] //인스펙터 창에서 보이는 글자. 바꿔도 무방

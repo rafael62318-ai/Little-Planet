@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6236790930908222091, guid: b4ebfe3d8ab4def429989cd25349eb90, type: 3}
       propertyPath: m_Name
-      value: HomeBase Variant
+      value: HomeBase
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -107,8 +107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 101e335bc9da1314f9f4e4d8278e04df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1000
+  maxHealth: 100
   maxEnergy: 100
+  myHealthBar: {fileID: 0}
 --- !u!54 &4925947110512788335
 Rigidbody:
   m_ObjectHideFlags: 0
