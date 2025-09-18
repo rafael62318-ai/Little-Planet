@@ -1,23 +1,22 @@
 using UnityEngine;
+using System;
 using System.Collections; // 코루틴을 사용하기 위해 필요합니다.
 
 public class AlienThrower : MonoBehaviour
 {
-    private float lastThrowTime;
-    private bool isThrowing = false;
-    private AudioSource audioSource; // AudioSource 컴포넌트 변수
+    [Header("던지기 횟수 설정")]
+    [Tooltip("최대로 던질 수 있는 아군 외계인 횟수입니다.")]
+    public int maxThrows = 10;
+
+    public event Action<int> OnThrowCounbtChanged;
 
     [Header("프리팹 설정")]
     [Tooltip("던질 아군 외계인 유닛의 프리팹입니다.")]
     public GameObject friendlyAlienPrefab;
 
-    [Header("사운드 설정")]
-    [Tooltip("외계인을 던질 때 재생될 사운드 클립입니다.")]
-    public AudioClip throwSoundClip;
-
     [Header("발사 설정")]
     [Tooltip("유닛을 꺼내는 연출이 시작될 위치입니다. (바구니 안쪽 중앙)")]
-    public Transform basketCenterPoint; // ★★★ 새로 추가된 변수 ★★★
+    public Transform basketCenterPoint; 
 
     [Tooltip("유닛이 발사될 최종 위치입니다. (보통 카메라 앞)")]
     public Transform throwPoint;
@@ -27,27 +26,25 @@ public class AlienThrower : MonoBehaviour
 
     [Header("연출 설정")]
     [Tooltip("바구니에서 유닛을 꺼내는 데 걸리는 시간입니다.")]
-    public float pullOutDuration = 0.5f; // ★★★ 새로 추가된 변수 ★★★
+    public float pullOutDuration = 0.5f; 
 
     [Header("쿨타임 설정")]
     public float throwCooldown = 1.0f;
     
-    
+    private float lastThrowTime;
+    private bool isThrowing = false; // 현재 던지는 연출이 진행 중인지 확인하는 변수
+    private int remainingThrows;
 
-     void Start()
+    void Start()
     {
-        // 이 스크립트가 붙어있는 게임 오브젝트의 AudioSource 컴포넌트 가져오기
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            Debug.LogWarning("AudioSource 컴포넌트를 찾을 수 없습니다! " + gameObject.name + "에 AudioSource를 추가해주세요.");
-        }
+        remainingThrows = maxThrows;
+        OnThrowCounbtChanged?.Invoke(remainingThrows);
     }
 
     void Update()
     {
         // 마우스 왼쪽 버튼을 클릭했고, 쿨타임이 지났고, 현재 던지는 중이 아닐 때
-        if (Input.GetMouseButtonDown(0) && Time.time > lastThrowTime + throwCooldown && !isThrowing)
+        if (Input.GetMouseButtonDown(0) &&remainingThrows > 0 && Time.time > lastThrowTime + throwCooldown && !isThrowing)
         {
             StartCoroutine(ThrowAlienSequence()); // 일반 함수 호출 대신 코루틴을 시작합니다.
         }
@@ -67,9 +64,17 @@ public class AlienThrower : MonoBehaviour
             yield break; // 코루틴 즉시 종료
         }
 
+        remainingThrows--;
+        OnThrowCounbtChanged?.Invoke(remainingThrows);
+        Debug.Log("아군 유닛 투척! 남은 횟수: " + remainingThrows);
+
         // --- 2. '꺼내는' 연출 단계 ---
         // 바구니 중앙에 작은 크기로 유닛 생성
         GameObject alienInstance = Instantiate(friendlyAlienPrefab, basketCenterPoint.position, basketCenterPoint.rotation);
+
+        FriendlyAlienAI alienAI = alienInstance.GetComponent<FriendlyAlienAI>();
+        if (alienAI != null) alienAI.enabled = false;
+
         Vector3 originalScale = alienInstance.transform.localScale;
         alienInstance.transform.localScale = Vector3.zero; // 처음엔 보이지 않도록 크기를 0으로 설정
 
@@ -95,17 +100,12 @@ public class AlienThrower : MonoBehaviour
         // --- 3. 발사 단계 ---
         if (rb != null)
         {
-            rb.isKinematic = false;
+            rb.isKinematic = false; // 물리 효과 다시 켜기
             rb.AddForce(throwPoint.forward * throwForce, ForceMode.Impulse);
-        }
 
-        // ★★★ 유닛을 던진 직후에 소리를 재생합니다. ★★★
-        if (audioSource != null && throwSoundClip != null)
-        {
-            audioSource.PlayOneShot(throwSoundClip);
+            if (alienAI != null) alienAI.enabled = true;
         }
-
-        isThrowing = false;
+        
+        isThrowing = false; // 던지기 완료
     }
-    
 }
