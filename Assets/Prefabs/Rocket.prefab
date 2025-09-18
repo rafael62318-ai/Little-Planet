@@ -283,6 +283,7 @@ GameObject:
   - component: {fileID: 9119604117534177222}
   - component: {fileID: 1061741459336655759}
   - component: {fileID: 6604139191922503535}
+  - component: {fileID: 5305830739166372448}
   m_Layer: 0
   m_Name: Rocket
   m_TagString: Untagged
@@ -312,7 +313,6 @@ Transform:
   - {fileID: 4570917250845178128}
   - {fileID: 7305457446456942275}
   - {fileID: 7532004590752864377}
-  - {fileID: 8896210727528468046}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5873575800739430068
@@ -404,6 +404,8 @@ MonoBehaviour:
   moveSpeed: 5
   attackDamage: 10
   attackCooldown: 1.5
+  attackEffectPrefab: {fileID: 5503505460791601945, guid: 74c549d1b06b6b140a1fd9536eea637f, type: 3}
+  attackSoundClip: {fileID: 8300000, guid: 113cfbce4b2a92f48a581e22593b1427, type: 3}
 --- !u!114 &1061741459336655759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -538,6 +540,103 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
+--- !u!82 &5305830739166372448
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876194674969869940}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &961551799859523841
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +1098,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.99999994, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8896210727528468046}
   - {fileID: 9025147277752963611}
   m_Father: {fileID: 9093053233234748972}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1787,12 +1887,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8769928716050993936}
   serializedVersion: 2
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: -0.00000006953546}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1.849506, y: 1.849506, z: 1.849506}
+  m_LocalRotation: {x: 1, y: 0.000000003097036, z: -0.0000000029398595, w: 0.0000000068997243}
+  m_LocalPosition: {x: -0, y: -2.7230632, z: 0.016787708}
+  m_LocalScale: {x: 1.849506, y: 1.8495063, z: 1.8495063}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 532285427631695054}
+  m_Father: {fileID: 7269184073580988142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8492802925247913348
 MeshFilter:

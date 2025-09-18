@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class FriendlyAlienAI : MonoBehaviour
-{
+{   
     [Header("AI 설정")]
     public float searchRadius = 15f; //적을 탐지할 수 있는 최대 반겅
     public float attackRange = 5f; //공격이 가능한 최대 사거리
@@ -10,15 +10,25 @@ public class FriendlyAlienAI : MonoBehaviour
     [Header("공격 설정")]
     public int attackDamage = 10; //적에게 가하는 공격력
     public float attackCooldown = 1.5f; //공격 속도
+    public GameObject attackEffectPrefab; // 공격 이펙트 프리팹
+    public AudioClip attackSoundClip; // 공격 사운드 변수
 
     //내부 변수
     private Transform currentTarget;
     private float lastAttackTime;
     private Rigidbody rb;
+    private Animator animator; // 애니메이터 변수 추가
+     private AudioSource audioSource;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+         animator = GetComponent<Animator>(); // Animator 컴포넌트 가져오기
+         audioSource = GetComponent<AudioSource>();
+        // 시작과 동시에 달리기 애니메이션으로 설정
+        animator.SetBool("isAttacking", false);
+
         //일정 시간마다 새로운 타겟을 찾는 탐색 루틴 시작
         InvokeRepeating("FindTarget", 0f, 0.5f);
     }
@@ -28,6 +38,8 @@ public class FriendlyAlienAI : MonoBehaviour
         //현재 타겟이 없다면 아무것도 하지 않는다
         if (currentTarget == null)
         {
+            // 타겟이 없다면 애니메이션을 달리기 상태로 유지
+            animator.SetBool("isAttacking", false);
             return;
         }
 
@@ -74,6 +86,9 @@ public class FriendlyAlienAI : MonoBehaviour
     //타겟을 향해 이동하는 함수
     void MoveTowardsTarget()
     {
+        // 타겟이 있을 때만 달리기 애니메이션 실행
+        animator.SetBool("isAttacking", false);
+
         //행성 표면을 따라 자연스럽게 회전 및 이동
         Vector3 dir = (currentTarget.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
@@ -95,11 +110,26 @@ public class FriendlyAlienAI : MonoBehaviour
         //공격 쿨타임이 지났는지 확인
         if (Time.time >= lastAttackTime + attackCooldown)
         {
+             // 공격 애니메이션 실행
+            animator.SetBool("isAttacking", true);
+
             //타겟을 향해 바라보도록 방향 고정
             transform.LookAt(currentTarget);
 
             Debug.Log(currentTarget.name + "을(를) 공격!");
             //여기에 공격 애니메이션, 사운드, 이펙트 재생 코드를 추가할 수 있습니다. 
+            // 공격 사운드 재생
+            if (audioSource != null && attackSoundClip != null)
+            {
+                audioSource.PlayOneShot(attackSoundClip);
+            }
+            
+             // 공격 이펙트 재생
+            if (attackEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(attackEffectPrefab, transform.position, Quaternion.identity);
+                Destroy(effect, 2f); 
+            }
 
             EnemyHealth targetHealth = currentTarget.GetComponent<EnemyHealth>();
             if (targetHealth != null)
@@ -110,6 +140,8 @@ public class FriendlyAlienAI : MonoBehaviour
             {
                 //타겟이 파괴되거나 사라졌을 경우
                 currentTarget = null;
+                // 적이 파괴되면 공격 애니메이션 멈추고 달리기 상태로
+                animator.SetBool("isAttacking", false);
             }
 
             lastAttackTime = Time.time;

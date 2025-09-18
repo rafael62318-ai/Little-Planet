@@ -7,14 +7,24 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private int attackDamage = 10;
-    
+
+    [Header("폭발 설정")]
+    public GameObject explosionPrefab; // 폭발 파티클 프리팹
+    public AudioClip explosionSoundClip; // 폭발 사운드 클립
+    public float destroyDelay = 0.5f; // 오브젝트 삭제 지연
+
+    // 사운드 관련 변수 추가
+    [Header("사운드 설정")]
+    public AudioClip movingSoundClip; // 이동 효과음(발자국 등)을 담을 변수
+    private AudioSource audioSource; // AudioSource 컴포넌트 참조 변수
+
     // WaveManager가 이 변수에 경로 정보를 자동으로 넣어줍니다.
     [HideInInspector]
     public Transform[] waypoints;
 
     // 애니메이터 컴포넌트 참조 변수
     private Animator _animator;
-    
+
     private int waypointIndex = 0;
     private bool hasReachedEnd = false;
     private bool isAttacking = false;
@@ -26,6 +36,8 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogWarning("Animator 컴포넌트를 찾을 수 없습니다. " + gameObject.name + "에 Animator를 추가했는지 확인해주세요.");
         }
+        // AudioSource 컴포넌트 가져오기
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -46,10 +58,16 @@ public class Enemy : MonoBehaviour
 
         // 현재 목표 웨이포인트를 설정합니다.
         Transform targetWaypoint = waypoints[waypointIndex];
-        
+
         if (_animator != null)
         {
             _animator.SetBool("IsMoving", true);
+            // 이동 중이 아닐 때만 소리를 재생
+            if (movingSoundClip != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(movingSoundClip);
+            }
+
         }
 
         // --- 행성 표면에 맞는 이동 및 회전 로직 ---
@@ -71,16 +89,22 @@ public class Enemy : MonoBehaviour
         // 본진(HomeBase)과 충돌했을 때
         if (other.GetComponent<HomeBase>() != null)
         {
-            // 아직 공격 중이 아니라면
+            // 폭발과 사운드를 재생
+            PlayExplosion();
+
+            // 기존의 공격 로직은 필요에 따라 유지
             if (!isAttacking)
             {
                 isAttacking = true;
                 StopMovement();
                 StartCoroutine(AttackBase());
             }
+
+            // 오브젝트를 파괴 (소리가 재생될 시간을 주기 위해 지연)
+            Destroy(gameObject, destroyDelay);
         }
     }
-    
+
     // 본진을 주기적으로 공격하는 로직입니다.
     IEnumerator AttackBase()
     {
@@ -108,9 +132,14 @@ public class Enemy : MonoBehaviour
         if (_animator != null)
         {
             _animator.SetBool("IsMoving", false);
+            // 이동을 멈출 때 소리도 함께 멈춤
+            if (audioSource != null && audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
         }
     }
-    
+
     // --- 다른 스크립트에서 호출할 수 있는 애니메이션 관련 메서드 ---
     public void TakeHit()
     {
@@ -132,5 +161,20 @@ public class Enemy : MonoBehaviour
         {
             _animator.SetTrigger("Victory");
         }
+    }
+    // 폭발 효과와 사운드를 재생하는 함수
+    void PlayExplosion()
+    {
+    // 1) 폭발 이펙트 생성
+    if (explosionPrefab != null)
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+    }
+
+    // 2) 폭발 사운드 재생
+    if (explosionSoundClip != null)
+    {
+        AudioSource.PlayClipAtPoint(explosionSoundClip, transform.position);
+    }
     }
 }

@@ -3,9 +3,17 @@ using System.Collections; // 코루틴을 사용하기 위해 필요합니다.
 
 public class AlienThrower : MonoBehaviour
 {
+    private float lastThrowTime;
+    private bool isThrowing = false;
+    private AudioSource audioSource; // AudioSource 컴포넌트 변수
+
     [Header("프리팹 설정")]
     [Tooltip("던질 아군 외계인 유닛의 프리팹입니다.")]
     public GameObject friendlyAlienPrefab;
+
+    [Header("사운드 설정")]
+    [Tooltip("외계인을 던질 때 재생될 사운드 클립입니다.")]
+    public AudioClip throwSoundClip;
 
     [Header("발사 설정")]
     [Tooltip("유닛을 꺼내는 연출이 시작될 위치입니다. (바구니 안쪽 중앙)")]
@@ -24,8 +32,17 @@ public class AlienThrower : MonoBehaviour
     [Header("쿨타임 설정")]
     public float throwCooldown = 1.0f;
     
-    private float lastThrowTime;
-    private bool isThrowing = false; // 현재 던지는 연출이 진행 중인지 확인하는 변수
+    
+
+     void Start()
+    {
+        // 이 스크립트가 붙어있는 게임 오브젝트의 AudioSource 컴포넌트 가져오기
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogWarning("AudioSource 컴포넌트를 찾을 수 없습니다! " + gameObject.name + "에 AudioSource를 추가해주세요.");
+        }
+    }
 
     void Update()
     {
@@ -78,10 +95,17 @@ public class AlienThrower : MonoBehaviour
         // --- 3. 발사 단계 ---
         if (rb != null)
         {
-            rb.isKinematic = false; // 물리 효과 다시 켜기
+            rb.isKinematic = false;
             rb.AddForce(throwPoint.forward * throwForce, ForceMode.Impulse);
         }
-        
-        isThrowing = false; // 던지기 완료
+
+        // ★★★ 유닛을 던진 직후에 소리를 재생합니다. ★★★
+        if (audioSource != null && throwSoundClip != null)
+        {
+            audioSource.PlayOneShot(throwSoundClip);
+        }
+
+        isThrowing = false;
     }
+    
 }
