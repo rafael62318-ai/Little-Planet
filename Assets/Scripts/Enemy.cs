@@ -17,8 +17,8 @@ public class Enemy : MonoBehaviour
     
     private int waypointIndex = 0;
     private bool hasReachedEnd = false;
+    private bool isAttacking = false;
 
-    // 게임 시작 시 애니메이터 컴포넌트를 찾습니다.
     void Start()
     {
         _animator = GetComponent<Animator>();
@@ -30,30 +30,23 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        // 경로 끝에 도달했다면 더 이상 움직이지 않습니다.
-        if (hasReachedEnd)
-        {
-            // 정지 상태이므로 IsMoving을 false로 설정합니다.
-            if (_animator != null)
-            {
-                _animator.SetBool("IsMoving", false);
-            }
-            return;
-        }
+        // 이미 공격 중이라면 더 이상 움직이지 않습니다.
+        if (isAttacking) return;
 
-        // 웨이포인트가 설정되지 않았거나, 모든 경로를 통과했다면
+        // 웨이포인트가 할당되지 않았거나, 모든 경로를 통과했다면
         if (waypoints == null || waypointIndex >= waypoints.Length)
         {
+            // 경로 끝에 도달했으므로 공격을 시작합니다.
             hasReachedEnd = true;
-            // 이동을 멈추고 공격을 시작합니다.
+            isAttacking = true;
+            StopMovement();
             StartCoroutine(AttackBase());
             return;
         }
 
         // 현재 목표 웨이포인트를 설정합니다.
         Transform targetWaypoint = waypoints[waypointIndex];
-
-        // 이동 중이므로 IsMoving을 true로 설정합니다.
+        
         if (_animator != null)
         {
             _animator.SetBool("IsMoving", true);
@@ -71,33 +64,54 @@ public class Enemy : MonoBehaviour
             waypointIndex++;
         }
     }
+
+    // 트리거 충돌 감지 메서드 (본진과 충돌 시 호출)
+    private void OnTriggerEnter(Collider other)
+    {
+        // 본진(HomeBase)과 충돌했을 때
+        if (other.GetComponent<HomeBase>() != null)
+        {
+            // 아직 공격 중이 아니라면
+            if (!isAttacking)
+            {
+                isAttacking = true;
+                StopMovement();
+                StartCoroutine(AttackBase());
+            }
+        }
+    }
     
     // 본진을 주기적으로 공격하는 로직입니다.
     IEnumerator AttackBase()
     {
         while (true)
         {
-            // 공격 애니메이션 트리거를 실행합니다.
             if (_animator != null)
             {
                 _animator.SetTrigger("Attack");
             }
 
-            // HomeBase 스크립트의 싱글톤 인스턴스를 통해 공격합니다.
             if (HomeBase.Instance != null)
             {
                 HomeBase.Instance.TakeDamage(attackDamage);
             }
-            
-            // 1초 대기 후 다시 공격합니다.
-            // 애니메이션 길이에 맞춰 yield return 시간을 조절하면 더 자연스럽습니다.
+            else
+            {
+                Debug.LogWarning("경고! HomeBase.Instance가 null입니다. 본진에 HomeBase 스크립트가 할당되었는지 확인하세요.");
+            }
             yield return new WaitForSeconds(1f);
         }
     }
 
-    // --- 다른 스크립트에서 호출할 수 있는 애니메이션 관련 메서드 ---
+    public void StopMovement()
+    {
+        if (_animator != null)
+        {
+            _animator.SetBool("IsMoving", false);
+        }
+    }
     
-    // 공격을 받았을 때 호출합니다.
+    // --- 다른 스크립트에서 호출할 수 있는 애니메이션 관련 메서드 ---
     public void TakeHit()
     {
         if (_animator != null)
@@ -105,8 +119,6 @@ public class Enemy : MonoBehaviour
             _animator.SetTrigger("GetHit");
         }
     }
-
-    // 적이 죽었을 때 호출합니다.
     public void Die()
     {
         if (_animator != null)
@@ -114,8 +126,6 @@ public class Enemy : MonoBehaviour
             _animator.SetTrigger("Die");
         }
     }
-
-    // 게임에서 승리했을 때 호출합니다.
     public void CelebrateVictory()
     {
         if (_animator != null)
