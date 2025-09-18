@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3666965518352472780, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 246431c8524eb4341af9f055ea948341, type: 2}
     - target: {fileID: 6040362807802321000, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
       propertyPath: myHealthBar
       value: 
