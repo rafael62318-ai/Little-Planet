@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI; //  1. [필수] UI 요소를 사용하기 위해 추가
 
 public class HomeBase : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class HomeBase : MonoBehaviour
 
     [Header("UI 설정")]
     public WorldSpaceHealthBar myHealthBar;
+    public Slider energySlider; //  2. [추가] 에너지 충전 상태를 표시할 슬라이더
 
     [Header("이펙트 설정")]
     public GameObject buffEffectPrefab;
@@ -51,6 +53,13 @@ public class HomeBase : MonoBehaviour
             myHealthBar.UpdateHealth(currentHealth, maxHealth);
         }
 
+        // 👈 3. [추가] 에너지 슬라이더 초기 설정
+        if (energySlider != null)
+        {
+            energySlider.maxValue = maxEnergy;
+            energySlider.value = currentEnergy;
+        }
+
         Debug.Log("본진 생성 완료! 현재 체력: " + currentHealth + ", 에너지 충전 속도: " + energyChargeRate + " per second.");
     }
 
@@ -61,10 +70,22 @@ public class HomeBase : MonoBehaviour
         {
             currentEnergy += energyChargeRate * Time.deltaTime;
             currentEnergy = Mathf.Min(currentEnergy, maxEnergy);
+
+            // 👈 4. [추가] 에너지 슬라이더 값 업데이트
+            if (energySlider != null)
+            {
+                energySlider.value = currentEnergy;
+            }
+
+            // 👈 5. [추가] 충전 완료 시 게임 클리어 체크
+            if (currentEnergy >= maxEnergy)
+            {
+                GameClear();
+            }
         }
         // 에너지가 최대치를 넘지 않도록 보정합니다.
-        
-         // 스파크 이펙트 로직
+
+        // 스파크 이펙트 로직
         // 공격받고 있지 않고 스파크 이펙트가 재생 중일 때
         if (!isDamaged && currentSparkEffect != null)
         {
@@ -115,4 +136,14 @@ public class HomeBase : MonoBehaviour
         // StopCoroutine("ResetDamageState");
         // StartCoroutine("ResetDamageState");
     }
+    
+     // 👈 6. [추가] 게임 클리어 함수 정의
+    private void GameClear()
+    {
+        Debug.Log(" 에너지 충전 완료! 게임 클리어 조건 달성!");
+        // 여기에 실제 게임 클리어 시 필요한 로직을 추가하세요.
+        // 예: SceneManager.LoadScene("ClearScene");
+        // 예: Time.timeScale = 0;
+    }
+
 }

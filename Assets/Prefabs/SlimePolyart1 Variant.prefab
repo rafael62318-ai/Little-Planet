@@ -52,6 +52,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimePolyart1 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2110157813491158450, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2110157813491158450, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 50339931608b0e0408599a2851dd6dff, type: 3}
+    - target: {fileID: 2110157813491158450, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2110157813491158450, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2110157813491158450, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2110157813491158450, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_FillMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2379929874817964106, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -64,6 +88,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 246431c8524eb4341af9f055ea948341, type: 2}
+    - target: {fileID: 4400515111549364266, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4400515111549364266, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7dd51bb6352d2644fa2a34da9c44275d, type: 3}
     - target: {fileID: 6040362807802321000, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
       propertyPath: myHealthBar
       value: 

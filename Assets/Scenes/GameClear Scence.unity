@@ -1621,7 +1621,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 378821961}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadLittlePlanetScene
+        m_MethodName: LoadStartScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
