@@ -12,6 +12,15 @@ public class HomeBase : MonoBehaviour
     [Header("UI 설정")]
     public WorldSpaceHealthBar myHealthBar;
 
+    [Header("이펙트 설정")]
+    public GameObject buffEffectPrefab;
+    public GameObject sparkEffectPrefab;
+
+    private GameObject currentBuffEffect;
+    private GameObject currentSparkEffect;
+
+    private bool isDamaged = false;
+
     public float currentHealth { get; private set; }
     public float currentEnergy { get; private set; }
 
@@ -55,6 +64,32 @@ public class HomeBase : MonoBehaviour
         }
         // 에너지가 최대치를 넘지 않도록 보정합니다.
         
+         // 스파크 이펙트 로직
+        // 공격받고 있지 않고 스파크 이펙트가 재생 중일 때
+        if (!isDamaged && currentSparkEffect != null)
+        {
+            Destroy(currentSparkEffect);
+            currentSparkEffect = null;
+        }
+        // 버프 이펙트 로직
+        // 에너지가 충전 중이고 (currentEnergy < maxEnergy) 공격받지 않을 때 (!isDamaged)
+        if (currentEnergy < maxEnergy && !isDamaged)
+        {
+            if (currentBuffEffect == null)
+            {
+                // 버프 이펙트가 없으면 생성
+                currentBuffEffect = Instantiate(buffEffectPrefab, transform.position, Quaternion.identity, transform);
+            }
+        }
+        else
+        {
+            if (currentBuffEffect != null)
+            {
+                // 조건에 맞지 않으면 버프 이펙트 파괴
+                Destroy(currentBuffEffect);
+                currentBuffEffect = null;
+            }
+        }
     }
 
     // 적의 공격으로 체력을 깎는 메서드
@@ -68,5 +103,16 @@ public class HomeBase : MonoBehaviour
         {
             myHealthBar.UpdateHealth(currentHealth, maxHealth);
         }
+        // 스파크 이펙트 로직
+        if (currentSparkEffect == null)
+        {
+            // 스파크 이펙트가 없으면 생성
+            currentSparkEffect = Instantiate(sparkEffectPrefab, transform.position, Quaternion.identity, transform);
+        }
+        // 피격 상태를 true로 설정
+        isDamaged = true;
+        // 피격 상태를 일정 시간 후에 false로 되돌리는 코루틴 호출 (선택 사항)
+        // StopCoroutine("ResetDamageState");
+        // StartCoroutine("ResetDamageState");
     }
 }

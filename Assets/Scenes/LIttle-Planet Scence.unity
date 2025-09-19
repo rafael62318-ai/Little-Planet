@@ -396,6 +396,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimePolyart1 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 7345206446256204834, guid: 854411da2ab683442a13b2f8d7054eae, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7972702798522545816, guid: 854411da2ab683442a13b2f8d7054eae, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.58
@@ -874,6 +878,10 @@ PrefabInstance:
     - target: {fileID: 7343370566017839598, guid: ec90a79f3b021aa4c997550bb8624467, type: 3}
       propertyPath: m_Name
       value: WaveManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7343370566017839598, guid: ec90a79f3b021aa4c997550bb8624467, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1639,6 +1647,14 @@ PrefabInstance:
       propertyPath: myHealthBar
       value: 
       objectReference: {fileID: 1642506563}
+    - target: {fileID: 5128963624726882843, guid: 79257badd35fd9d4ea5741ec8602bc96, type: 3}
+      propertyPath: buffEffectPrefab
+      value: 
+      objectReference: {fileID: 2791414280476621285, guid: 4b69ffab458455b48ad2b24b531deb80, type: 3}
+    - target: {fileID: 5128963624726882843, guid: 79257badd35fd9d4ea5741ec8602bc96, type: 3}
+      propertyPath: sparkEffectPrefab
+      value: 
+      objectReference: {fileID: 5445730995232329890, guid: 93ea06d22a0e4d640b4553470e039536, type: 3}
     - target: {fileID: 6615177674446136225, guid: 79257badd35fd9d4ea5741ec8602bc96, type: 3}
       propertyPath: m_Name
       value: HomeBase
