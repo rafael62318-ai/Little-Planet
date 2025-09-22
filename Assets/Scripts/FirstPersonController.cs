@@ -84,7 +84,7 @@ public class FirstPersonController : MonoBehaviour
         
         lastTurnInput = currentTurnInput;
 
-        if (Input.GetButtonDown("Jump")) // 점프는 기존 버튼 입력 유지 (필요시 XR 입력으로 변경 가능)
+        /*if (Input.GetButtonDown("Jump")) // 점프는 기존 버튼 입력 유지 (필요시 XR 입력으로 변경 가능)
         {
             if (Grounded)
             {
@@ -101,7 +101,7 @@ public class FirstPersonController : MonoBehaviour
         else
         {
             Grounded = false;
-        }
+        }*/
     }
 
     void FixedUpdate()
