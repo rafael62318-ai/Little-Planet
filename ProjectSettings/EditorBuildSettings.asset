@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Samples/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Main Scence.unity
+    path: Assets/Samples/Scenes/Main Scence.unity
     guid: 41ce618097ef46441b220e7a5af5e98d
   - enabled: 1
-    path: Assets/Scenes/LIttle-Planet Scence.unity
+    path: Assets/Samples/Scenes/LIttle-Planet Scence.unity
     guid: 78eb76ef2c68fd247b420519ea526f60
   - enabled: 1
-    path: Assets/Scenes/GameOver Scence.unity
+    path: Assets/Samples/Scenes/GameOver Scence.unity
     guid: b53f5f3dbef086e44933ac4fd48c6ed4
   - enabled: 1
-    path: Assets/Scenes/GameClear Scence.unity
+    path: Assets/Samples/Scenes/GameClear Scence.unity
     guid: 385b8845e50db4145b8ff67ad654b004
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
