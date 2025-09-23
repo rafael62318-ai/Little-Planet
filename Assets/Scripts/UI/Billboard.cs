@@ -31,6 +31,7 @@ public class Billboard : MonoBehaviour
         switch (billboardType)
         {
             case BillboardType.LookAtCamera:
+                //transform.LookAt(transform.position + mainCameraTransform.rotation * Vector3.forward,mainCameraTransform.rotation * Vector3.up);
                 transform.LookAt(mainCameraTransform.position, Vector3.up);
                 break;
             case BillboardType.CameraForward:
