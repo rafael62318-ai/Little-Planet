@@ -37,12 +37,16 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    void Die()
+    public void Die()
     {
         if (ResourceManager.Instance != null)
         {
             ResourceManager.Instance.AddGold(goldReward);
         }
         Destroy(gameObject);
+    }
+    public bool IsDead()
+    {
+        return currentHealth <= 0;
     }
 }

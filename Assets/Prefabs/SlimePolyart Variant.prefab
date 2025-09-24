@@ -570,6 +570,8 @@ MonoBehaviour:
   explosionSoundClip: {fileID: 0}
   destroyDelay: 0.5
   movingSoundClip: {fileID: 0}
+  maxDistanceFromPlanet: 15
+  destroyOutOfBoundsDelay: 5
   waypoints: []
 --- !u!114 &6040362807802321000
 MonoBehaviour:

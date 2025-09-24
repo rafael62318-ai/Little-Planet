@@ -13,10 +13,20 @@ public class Enemy : MonoBehaviour
     public AudioClip explosionSoundClip; // 폭발 사운드 클립
     public float destroyDelay = 0.5f; // 오브젝트 삭제 지연
 
-    // 사운드 관련 변수 추가
     [Header("사운드 설정")]
     public AudioClip movingSoundClip; // 이동 효과음(발자국 등)을 담을 변수
     private AudioSource audioSource; // AudioSource 컴포넌트 참조 변수
+
+    [Header("자동 파괴 설정")]
+    [Tooltip("행성 중심으로부터 이 거리보다 멀어지면 파괴 타이머가 시작됩니다.")]
+    public float maxDistanceFromPlanet = 50f;
+    [Tooltip("행성 밖에서 이 시간(초)이 지나면 자동으로 파괴됩니다.")]
+    public float destroyOutOfBoundsDelay = 5f;
+
+    private Transform planetTransform;
+    private float outOfBoundsTimer = 0f;
+    private EnemyHealth enemyHealth; // EnemyHealth 스크립트 참조
+
 
     // WaveManager가 이 변수에 경로 정보를 자동으로 넣어줍니다.
     [HideInInspector]
@@ -24,24 +34,58 @@ public class Enemy : MonoBehaviour
 
     // 애니메이터 컴포넌트 참조 변수
     private Animator _animator;
-
     private int waypointIndex = 0;
     private bool hasReachedEnd = false;
     private bool isAttacking = false;
+    private bool isDead = false;
 
     void Start()
     {
         _animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         if (_animator == null)
         {
             Debug.LogWarning("Animator 컴포넌트를 찾을 수 없습니다. " + gameObject.name + "에 Animator를 추가했는지 확인해주세요.");
         }
-        // AudioSource 컴포넌트 가져오기
-        audioSource = GetComponent<AudioSource>();
+        GameObject planetObj = GameObject.FindGameObjectWithTag("Planet");
+        if (planetObj != null)
+        {
+            planetTransform = planetObj.transform;
+        }
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     void Update()
     {
+        if (isAttacking || isDead) return;
+
+        // ★★★ 새로 추가된 자동 파괴 로직 ★★★
+        if (planetTransform != null)
+        {
+            float distance = Vector3.Distance(transform.position, planetTransform.position);
+            if (distance > maxDistanceFromPlanet)
+            {
+                outOfBoundsTimer += Time.deltaTime;
+                if (outOfBoundsTimer >= destroyOutOfBoundsDelay)
+                {
+                    Debug.Log(gameObject.name + "가 전장을 이탈하여 소멸합니다.");
+                    // EnemyHealth의 Die 함수를 호출하여 골드 획득 및 파괴 처리
+                    if (enemyHealth != null)
+                    {
+                        enemyHealth.Die(); 
+                    }
+                    else
+                    {
+                        Destroy(gameObject); // 만약 EnemyHealth가 없다면 그냥 파괴
+                    }
+                    return; 
+                }
+            }
+            else
+            {
+                outOfBoundsTimer = 0f;
+            }
+        }
         // 이미 공격 중이라면 더 이상 움직이지 않습니다.
         if (isAttacking) return;
 
@@ -105,6 +149,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    
+
     // 본진을 주기적으로 공격하는 로직입니다.
     IEnumerator AttackBase()
     {
@@ -166,15 +212,15 @@ public class Enemy : MonoBehaviour
     void PlayExplosion()
     {
     // 1) 폭발 이펙트 생성
-    if (explosionPrefab != null)
-    {
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-    }
+        if (explosionPrefab != null)
+        {
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        }
 
     // 2) 폭발 사운드 재생
-    if (explosionSoundClip != null)
-    {
-        AudioSource.PlayClipAtPoint(explosionSoundClip, transform.position);
-    }
+        if (explosionSoundClip != null)
+        {
+            AudioSource.PlayClipAtPoint(explosionSoundClip, transform.position);
+        }
     }
 }

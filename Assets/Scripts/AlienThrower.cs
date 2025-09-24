@@ -8,7 +8,7 @@ public class AlienThrower : MonoBehaviour
     [Tooltip("최대로 던질 수 있는 아군 외계인 횟수입니다.")]
     public int maxThrows = 10;
 
-    public event Action<int> OnThrowCounbtChanged;
+    public event Action<int> OnThrowCountChanged;
 
     [Header("프리팹 설정")]
     [Tooltip("던질 아군 외계인 유닛의 프리팹입니다.")]
@@ -38,7 +38,7 @@ public class AlienThrower : MonoBehaviour
     void Start()
     {
         remainingThrows = maxThrows;
-        OnThrowCounbtChanged?.Invoke(remainingThrows);
+        OnThrowCountChanged?.Invoke(remainingThrows);
     }
 
     void Update()
@@ -65,7 +65,7 @@ public class AlienThrower : MonoBehaviour
         }
 
         remainingThrows--;
-        OnThrowCounbtChanged?.Invoke(remainingThrows);
+        OnThrowCountChanged?.Invoke(remainingThrows);
         Debug.Log("아군 유닛 투척! 남은 횟수: " + remainingThrows);
 
         // --- 2. '꺼내는' 연출 단계 ---

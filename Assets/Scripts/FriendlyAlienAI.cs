@@ -1,67 +1,107 @@
 using UnityEngine;
+using System.Collections;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(GravityBody))]
 public class FriendlyAlienAI : MonoBehaviour
-{   
+{
     [Header("AI 설정")]
-    public float searchRadius = 15f; //적을 탐지할 수 있는 최대 반겅
-    public float attackRange = 5f; //공격이 가능한 최대 사거리
+    public float searchRadius = 15f;
+    public float attackRange = 5f;
     public float moveSpeed = 5f;
 
     [Header("공격 설정")]
-    public int attackDamage = 10; //적에게 가하는 공격력
-    public float attackCooldown = 1.5f; //공격 속도
-    public GameObject attackEffectPrefab; // 공격 이펙트 프리팹
-    public AudioClip attackSoundClip; // 공격 사운드 변수
+    public int attackDamage = 10;
+    public float attackCooldown = 1.5f;
+    public GameObject attackEffectPrefab;
+    public AudioClip attackSoundClip;
+
+    // ★★★ 새로 추가된 부분 시작 ★★★
+    [Header("자동 파괴 설정")]
+    [Tooltip("행성 중심으로부터 이 거리보다 멀어지면 파괴 타이머가 시작됩니다.")]
+    public float maxDistanceFromPlanet = 50f;
+    [Tooltip("행성 밖에서 이 시간(초)이 지나면 자동으로 파괴됩니다.")]
+    public float destroyOutOfBoundsDelay = 5f;
+    
+    private Transform planetTransform;
+    private float outOfBoundsTimer = 0f;
+    // ★★★ 새로 추가된 부분 끝 ★★★
 
     //내부 변수
     private Transform currentTarget;
     private float lastAttackTime;
     private Rigidbody rb;
-    private Animator animator; // 애니메이터 변수 추가
-     private AudioSource audioSource;
+    private Animator animator;
+    private AudioSource audioSource;
+    private bool isDead = false; // Die 함수와 연동하기 위해 추가
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
 
-         animator = GetComponent<Animator>(); // Animator 컴포넌트 가져오기
-         audioSource = GetComponent<AudioSource>();
-        // 시작과 동시에 달리기 애니메이션으로 설정
+        // 기존 애니메이션 로직
         animator.SetBool("isAttacking", false);
 
-        //일정 시간마다 새로운 타겟을 찾는 탐색 루틴 시작
+        // ★★★ 시작할 때 행성의 위치를 찾아 저장합니다. ★★★
+        GameObject planetObj = GameObject.FindGameObjectWithTag("Planet");
+        if (planetObj != null)
+        {
+            planetTransform = planetObj.transform;
+        }
+
         InvokeRepeating("FindTarget", 0f, 0.5f);
     }
 
     void Update()
     {
-        //현재 타겟이 없다면 아무것도 하지 않는다
+        if (isDead) return;
+
+        // ★★★ 새로 추가된 자동 파괴 로직 ★★★
+        if (planetTransform != null)
+        {
+            float distance = Vector3.Distance(transform.position, planetTransform.position);
+            if (distance > maxDistanceFromPlanet)
+            {
+                outOfBoundsTimer += Time.deltaTime;
+                if (outOfBoundsTimer >= destroyOutOfBoundsDelay)
+                {
+                    Debug.Log(gameObject.name + "가 전장을 이탈하여 소멸합니다.");
+                    Die(); 
+                    return; 
+                }
+            }
+            else
+            {
+                outOfBoundsTimer = 0f;
+            }
+        }
+        // ★★★ 자동 파괴 로직 끝 ★★★
+
+        // --- 이하 기존 로직 ---
         if (currentTarget == null)
         {
-            // 타겟이 없다면 애니메이션을 달리기 상태로 유지
             animator.SetBool("isAttacking", false);
             return;
         }
-
-        //타겟과의 거리를 계산한다
+        
         float distanceToTarget = Vector3.Distance(transform.position, currentTarget.position);
-        //타켓이 공격 사거리 안에 있다면 공격한다
+        
         if (distanceToTarget <= attackRange)
         {
             StopMovement();
             Attack();
         }
-        //타겟이 공격 사거리 밖에 있다면, 타켓을 향해 이동한다
         else
         {
             MoveTowardsTarget();
         }
     }
 
-    //주변에서 가장 가까운 적을 찾는 함수
     void FindTarget()
     {
-        //이미 유효한 타겟이 있다면 다시 찾지 않는다
         if (currentTarget != null) return;
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, searchRadius);
@@ -70,7 +110,7 @@ public class FriendlyAlienAI : MonoBehaviour
 
         foreach (Collider col in colliders)
         {
-            if (col.CompareTag("Enemy")) //"Enemy" 태그를 가진 오브잭트를 찾는다
+            if (col.CompareTag("Enemy"))
             {
                 float distance = Vector3.Distance(transform.position, col.transform.position);
                 if (distance < minDistance)
@@ -83,68 +123,67 @@ public class FriendlyAlienAI : MonoBehaviour
         currentTarget = closestEnemy;
     }
 
-    //타겟을 향해 이동하는 함수
     void MoveTowardsTarget()
     {
-        // 타겟이 있을 때만 달리기 애니메이션 실행
         animator.SetBool("isAttacking", false);
-
-        //행성 표면을 따라 자연스럽게 회전 및 이동
+        
         Vector3 dir = (currentTarget.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-
-        //Rigidbody를 이용해 물리적으로 이동
+        
         rb.MovePosition(transform.position + transform.forward * moveSpeed * Time.deltaTime);
     }
 
-    //이동을 멈추는 함수
     void StopMovement()
     {
-        rb.linearVelocity = Vector3.zero; //물리적 속도를 0으로 만들어 멈춤
+        rb.linearVelocity = Vector3.zero;
     }
 
-    //타겟을 공격하는 함수
     void Attack()
     {
-        //공격 쿨타임이 지났는지 확인
         if (Time.time >= lastAttackTime + attackCooldown)
         {
-             // 공격 애니메이션 실행
             animator.SetBool("isAttacking", true);
-
-            //타겟을 향해 바라보도록 방향 고정
             transform.LookAt(currentTarget);
 
-            Debug.Log(currentTarget.name + "을(를) 공격!");
-            //여기에 공격 애니메이션, 사운드, 이펙트 재생 코드를 추가할 수 있습니다. 
-            // 공격 사운드 재생
             if (audioSource != null && attackSoundClip != null)
             {
                 audioSource.PlayOneShot(attackSoundClip);
             }
             
-             // 공격 이펙트 재생
             if (attackEffectPrefab != null)
             {
                 GameObject effect = Instantiate(attackEffectPrefab, transform.position, Quaternion.identity);
-                Destroy(effect, 2f); 
+                Destroy(effect, 2f);
             }
-
+            
             EnemyHealth targetHealth = currentTarget.GetComponent<EnemyHealth>();
             if (targetHealth != null)
             {
-                targetHealth.TakeDamage(attackDamage);
+                targetHealth.TakeDamage((int)attackDamage);
+                
+                if(targetHealth.IsDead())
+                {
+                     currentTarget = null;
+                     animator.SetBool("isAttacking", false);
+                }
             }
             else
             {
-                //타겟이 파괴되거나 사라졌을 경우
                 currentTarget = null;
-                // 적이 파괴되면 공격 애니메이션 멈추고 달리기 상태로
                 animator.SetBool("isAttacking", false);
             }
-
             lastAttackTime = Time.time;
         }
+    }
+    
+    // ★★★ 자동 파괴 로직을 위한 Die 함수 추가 ★★★
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+        Debug.LogWarning(gameObject.name + "가 파괴되었습니다!");
+        // 모든 행동을 멈추고 3초 후에 오브젝트를 파괴합니다.
+        Destroy(gameObject, 3f);
     }
 }

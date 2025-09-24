@@ -9,7 +9,7 @@ public class ThrowCounterUI : MonoBehaviour
    
     void Start()
     {
-        alienThrower.OnThrowCounbtChanged += UpdateText;
+        alienThrower.OnThrowCountChanged += UpdateText;
         countText.text = $"Throw Count : {alienThrower.maxThrows}";
     }
 
@@ -23,7 +23,7 @@ public class ThrowCounterUI : MonoBehaviour
     {
         if (alienThrower != null)
         {
-            alienThrower.OnThrowCounbtChanged -= UpdateText;
+            alienThrower.OnThrowCountChanged -= UpdateText;
         }
     }
 }

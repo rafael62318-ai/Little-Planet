@@ -409,6 +409,8 @@ MonoBehaviour:
   attackCooldown: 1.5
   attackEffectPrefab: {fileID: 5503505460791601945, guid: 74c549d1b06b6b140a1fd9536eea637f, type: 3}
   attackSoundClip: {fileID: 8300000, guid: 113cfbce4b2a92f48a581e22593b1427, type: 3}
+  maxDistanceFromPlanet: 15
+  destroyOutOfBoundsDelay: 5
 --- !u!114 &1061741459336655759
 MonoBehaviour:
   m_ObjectHideFlags: 0
