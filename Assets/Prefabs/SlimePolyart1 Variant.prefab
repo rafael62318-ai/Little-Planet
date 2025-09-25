@@ -574,6 +574,10 @@ PrefabInstance:
       propertyPath: explosionSoundClip
       value: 
       objectReference: {fileID: 8300000, guid: 0c6772b51f5450246847881a903a6ac4, type: 3}
+    - target: {fileID: 7932511152130172802, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
+      propertyPath: maxDistanceFromPlanet
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8045560837524233616, guid: d5f9cd5814ae28847b6f52d4557f9cf5, type: 3}
       propertyPath: lockX
       value: 1

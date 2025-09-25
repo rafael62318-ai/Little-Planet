@@ -15,17 +15,9 @@ public class FriendlyAlienAI : MonoBehaviour
     public float attackCooldown = 1.5f;
     public GameObject attackEffectPrefab;
     public AudioClip attackSoundClip;
-
-    // ★★★ 새로 추가된 부분 시작 ★★★
-    [Header("자동 파괴 설정")]
-    [Tooltip("행성 중심으로부터 이 거리보다 멀어지면 파괴 타이머가 시작됩니다.")]
-    public float maxDistanceFromPlanet = 50f;
-    [Tooltip("행성 밖에서 이 시간(초)이 지나면 자동으로 파괴됩니다.")]
-    public float destroyOutOfBoundsDelay = 5f;
     
-    private Transform planetTransform;
-    private float outOfBoundsTimer = 0f;
-    // ★★★ 새로 추가된 부분 끝 ★★★
+    [HideInInspector]
+    public PocketReleaseGravity spawner;
 
     //내부 변수
     private Transform currentTarget;
@@ -33,7 +25,7 @@ public class FriendlyAlienAI : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
     private AudioSource audioSource;
-    private bool isDead = false; // Die 함수와 연동하기 위해 추가
+    private bool isDead = false;
 
     void Start()
     {
@@ -41,46 +33,14 @@ public class FriendlyAlienAI : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-
-        // 기존 애니메이션 로직
         animator.SetBool("isAttacking", false);
-
-        // ★★★ 시작할 때 행성의 위치를 찾아 저장합니다. ★★★
-        GameObject planetObj = GameObject.FindGameObjectWithTag("Planet");
-        if (planetObj != null)
-        {
-            planetTransform = planetObj.transform;
-        }
-
         InvokeRepeating("FindTarget", 0f, 0.5f);
     }
 
     void Update()
     {
         if (isDead) return;
-
-        // ★★★ 새로 추가된 자동 파괴 로직 ★★★
-        if (planetTransform != null)
-        {
-            float distance = Vector3.Distance(transform.position, planetTransform.position);
-            if (distance > maxDistanceFromPlanet)
-            {
-                outOfBoundsTimer += Time.deltaTime;
-                if (outOfBoundsTimer >= destroyOutOfBoundsDelay)
-                {
-                    Debug.Log(gameObject.name + "가 전장을 이탈하여 소멸합니다.");
-                    Die(); 
-                    return; 
-                }
-            }
-            else
-            {
-                outOfBoundsTimer = 0f;
-            }
-        }
-        // ★★★ 자동 파괴 로직 끝 ★★★
-
-        // --- 이하 기존 로직 ---
+        
         if (currentTarget == null)
         {
             animator.SetBool("isAttacking", false);
@@ -177,13 +137,18 @@ public class FriendlyAlienAI : MonoBehaviour
         }
     }
     
-    // ★★★ 자동 파괴 로직을 위한 Die 함수 추가 ★★★
     public void Die()
     {
         if (isDead) return;
         isDead = true;
+
+        // 만약 자신을 생성한 '스포너'가 있다면, 부활을 요청합니다.
+        if (spawner != null)
+        {
+            spawner.StartRespawn();
+        }
+
         Debug.LogWarning(gameObject.name + "가 파괴되었습니다!");
-        // 모든 행동을 멈추고 3초 후에 오브젝트를 파괴합니다.
         Destroy(gameObject, 3f);
     }
 }
